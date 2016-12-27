@@ -4,9 +4,11 @@
 \alias{connect_db}
 \title{Connect to db2}
 \usage{
-connect_db(host, port, dbname, user, pw)
+connect_db(driver, host, port, dbname, user, pw)
 }
 \arguments{
+\item{driver}{the path to the jdbc driver}
+
 \item{host}{The host name of the database.}
 
 \item{port}{the port number of the database}
