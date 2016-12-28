@@ -23,6 +23,6 @@ connect_db(driver, host, port, dbname, user, pw)
 This function allows to connect to db2 database
 }
 \examples{
-connect_db(host = "", port = "", user = "", pw = "")
+connect_db("C:/db2jcc4.jar", 'xx.xxx.org' port = "12345", user = "user", pw = "pw")
 }
 
