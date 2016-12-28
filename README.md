@@ -12,10 +12,10 @@ devtools::install_github("dajuntian/emr4washu")
 download jdbc driver for the database and save it somewhere safe.
 ## Example
 ```{r, eval = FALSE}
-conn <- emr4washu::connect_db("C:/mydocument/xxx.jar", 
-                              "xxx.xxx.xxx", 
-                              xxxxx, 
-                              'xxx', 
-                              'xxxx', 
-                              .rs.askForPassword("Enter password:"))
+conn <- emr4washu::connect_db("C:/mydocument/xxx.jar", # path to the jdbc driver
+                              "xxx.xxx.xxx", # the host name
+                              xxxxx, # the port number
+                              'xxx', # the database name  
+                              'xxxx', # username
+                              .rs.askForPassword("Enter password:")) #password
 ```
