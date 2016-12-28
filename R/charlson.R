@@ -17,14 +17,14 @@ charlson <- function(conn, pt_list, look_back = 5) {
   tryCatch(
     RJDBC::dbSendUpdate(conn, "drop table session.candidate"),
     error = function(cond) {
-      cat("notes: session.candidate does not exists")
+      cat("notes: session.candidate does not exists\n")
     }
   )
 
   tryCatch(
     RJDBC::dbWriteTable(conn, "session.candidate", pt, overwrite = TRUE),
     error = function(cond) {
-      cat("check if session.candidate was replace")
+      cat("check if session.candidate was replace\n")
       stop(cond)
     }
   )
@@ -73,13 +73,13 @@ charlson <- function(conn, pt_list, look_back = 5) {
 
   if (look_back == 5) {
     sql_get_icd = sql_get_icd_5
-    cat("looking back 5 years")
+    cat("looking back 5 years\n")
   } else if (look_back == 1) {
     sql_get_icd = sql_get_icd_1
-    cat("looking back 1 years")
+    cat("looking back 1 years\n")
   } else {
     sql_get_icd = sql_get_icd_5
-    cat("wrong looking back, use default 5 years")
+    cat("wrong looking back, use default 5 years\n")
   }
 
   pt_w_icd <- RJDBC::dbGetQuery(conn, sql_get_icd)
@@ -139,6 +139,6 @@ charlson <- function(conn, pt_list, look_back = 5) {
                      sub("\\.", "", format(Sys.time(), "%Y%m%d%H%M%OS2")),
                      ".csv")
   write.csv(result, out_file, row.names = F)
-  cat(paste0("file output to ", out_file))
+  cat(paste0("file output to ", out_file, "\n"))
 
 }
