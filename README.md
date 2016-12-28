@@ -8,3 +8,5 @@ emr4washu wraps up some of my SAS code into R package, so we can cook more effic
 # install.packages("devtools")
 devtools::install_github("dajuntian/emr4washu")
 ```
+## Post-Installation
+download jdbc driver for the database
