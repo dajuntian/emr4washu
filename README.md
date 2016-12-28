@@ -9,7 +9,9 @@ install.packages("devtools")
 devtools::install_github("dajuntian/emr4washu")
 ```
 ## Post-Installation
-download jdbc driver for the database and save it somewhere safe. If you already have the IBM client installed, it is usually found at C:\Program Files\IBM\SQLLIB\java
+download jdbc driver. If you already have the IBM client installed, it is usually found at C:\Program Files\IBM\SQLLIB\java\db2jcc4.jar.
+
+[download jre](http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html) and install with the default options
 ## Example
 ```{r, eval = FALSE}
 conn <- emr4washu::connect_db("C:/mydocument/xxx.jar", # path to the jdbc driver
