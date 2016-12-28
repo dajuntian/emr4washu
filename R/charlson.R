@@ -97,7 +97,8 @@ charlson <- function(conn, pt_list, look_back = 5) {
 
   #get icd9 comorbidity
   pt_w_icd9 <- pt_w_icd
-  pt_w_icd9[pt_w_icd9$ICDX_VERSION_NO == "10-CM", "ICDX_DIAGNOSIS_CODE"] <-
+  pt_w_icd9[!is.na(pt_w_icd9$ICDX_VERSION_NO) &
+              pt_w_icd9$ICDX_VERSION_NO == "10-CM", "ICDX_DIAGNOSIS_CODE"] <-
     NA
   pt_w_icd9$ICDX_VERSION_NO <- NULL
   com_pt9 <- icd::icd9_comorbid(
@@ -110,7 +111,8 @@ charlson <- function(conn, pt_list, look_back = 5) {
 
   #get icd10 comirbidity
   pt_w_icd10 <- pt_w_icd
-  pt_w_icd10[pt_w_icd10$ICDX_VERSION_NO == "9-CM", "ICDX_DIAGNOSIS_CODE"] <-
+  pt_w_icd10[!is.na(pt_w_icd9$ICDX_VERSION_NO) &
+               pt_w_icd10$ICDX_VERSION_NO == "9-CM", "ICDX_DIAGNOSIS_CODE"] <-
     NA
   pt_w_icd10$ICDX_VERSION_NO <- NULL
   com_pt10 <- icd::icd10_comorbid(
