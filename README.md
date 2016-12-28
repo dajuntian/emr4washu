@@ -15,12 +15,13 @@ devtools::install_github("dajuntian/emr4washu")
 ## Example
 ```{r, eval = FALSE}
 conn <- emr4washu::connect_db("C:/mydocument/xxx.jar", # path to the jdbc driver
-                              "xxx.xxx.xxx", # the host name
-                              xxxxx, # the port number
-                              'xxx', # the database name  
-                              'xxxx', # username
+                              "abc.efg.org", # the host name
+                              00000, # the port number
+                              'dbname', # the database name  
+                              'user', # username
                               .rs.askForPassword("Enter password:")) #password
 emr4washu::charlson(conn, 
-                    "patient-list.csv" # the csv file containing one column:visit no
+                    "patient-list.csv", # the csv file containing one column:visit no
+                    5 # time looking back, 1 or 5 years
                     )           
 ```
