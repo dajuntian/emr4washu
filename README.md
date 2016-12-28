@@ -10,3 +10,6 @@ devtools::install_github("dajuntian/emr4washu")
 ```
 ## Post-Installation
 download jdbc driver for the database and save it somewhere safe.
+## Example
+```{r, eval = FALSE}
+```
