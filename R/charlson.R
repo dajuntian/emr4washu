@@ -1,14 +1,15 @@
 #' Charlson score from visit_no
 #'
 #' This function calculates the Charlson score based on visit_no
+#' @param conn the connection from connect_db
 #' @param visit_no the visit_no from cds.cds_visit
-#'
+#' @param look_back the time looking back 1 or 5 years
 #' @export
 #' @examples
 #' \dontrun{
 #' charlson(conn, "pt list.csv")
 #' }
-charlson <- function(conn, pt_list) {
+charlson <- function(conn, pt_list, look_back = 5) {
   pt <- utils::read.csv(pt_list)
   names(pt)[1] <-  "VISIT_NO"
 
