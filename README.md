@@ -18,4 +18,7 @@ conn <- emr4washu::connect_db("C:/mydocument/xxx.jar", # path to the jdbc driver
                               'xxx', # the database name  
                               'xxxx', # username
                               .rs.askForPassword("Enter password:")) #password
+emr4washu::charlson(conn, 
+                    "patient-list.csv" # the csv file containing one column:visit no
+                    )           
 ```
