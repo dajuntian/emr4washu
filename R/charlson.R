@@ -139,12 +139,12 @@ select c.visit_no, icdx.ICDX_Diagnosis_Code, icdx.ICDX_Version_No
   com_pt <- com_pt9 | com_pt10
 
   score_pt <- icd::icd_charlson_from_comorbid(com_pt,
-                                              scoring_system = "quan", hierarchy = T)
+                                              scoring_system = "charlson", hierarchy = T)
   summary(score_pt)
 
   com_pt_n <- 1 * com_pt
 
-  result <- cbind(pt, com_pt_n, score_pt)
+  result <- cbind(pt[order(pt), , drop = F], com_pt_n, score_pt)
 
   #the output file name
   if (is.na(out_file)) {
