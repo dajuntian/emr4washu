@@ -14,14 +14,15 @@ devtools::install_github("dajuntian/emr4washu")
 [download jre](http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html) and install with the default options
 ## Example
 ```{r, eval = FALSE}
-conn <- emr4washu::connect_db("C:/mydocument/xxx.jar", # path to the jdbc driver
-                              "abc.efg.org", # the host name
-                              00000, # the port number
+conn <- emr4washu::connect_db("C:/mydocument/db2jcc4.jar", # path to the jdbc driver
+                              "db.company.org", # the host name
+                              12000, # the port number
                               'dbname', # the database name  
                               'user', # username
                               .rs.askForPassword("Enter password:")) #password
 emr4washu::charlson(conn, 
                     "patient-list.csv", # the csv file containing one column:visit no
-                    5 # time looking back, 1 or 5 years
+                    "pt-w-charlson.csv", # optional, output file name
+                    5 # optional, time looking back, 1 or 5 years
                     )           
 ```
