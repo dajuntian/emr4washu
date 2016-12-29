@@ -4,9 +4,13 @@
 \alias{charlson}
 \title{Charlson score from visit_no}
 \usage{
-charlson(conn, pt_list)
+charlson(conn, pt_list, out_file = NA, look_back = 5)
 }
 \arguments{
+\item{conn}{the connection from connect_db}
+
+\item{look_back}{the time looking back 1 or 5 years}
+
 \item{visit_no}{the visit_no from cds.cds_visit}
 }
 \description{
