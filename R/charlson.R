@@ -90,6 +90,8 @@ select c.visit_no, icdx.ICDX_Diagnosis_Code, icdx.ICDX_Version_No
 
   pt_w_icd <- RJDBC::dbGetQuery(conn, sql_get_icd)
 
+  RJDBC::dbSendUpdate(conn, "drop table session.candidate")
+  
   #merge with original input
   pt_w_icd <- merge(pt,
                     pt_w_icd,
