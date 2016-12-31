@@ -2,3 +2,4 @@
 
 export(charlson)
 export(connect_db)
+export(lab)
