@@ -22,9 +22,9 @@ conn <- connect_db("C:/mydocument/db2jcc4.jar", # path to the jdbc driver
                               'user', # username
                               .rs.askForPassword("Enter password:")) #password
 charlson(conn, 
-                    "patient-list.csv", # the csv file containing one column:visit no
-                    "pt-w-charlson.csv", # optional, output file name
-                    5 # optional, time looking back, 1 or 5 years
-                    )  
+         "patient-list.csv", # the csv file containing one column:visit no
+         "pt-w-charlson.csv", # optional, output file name
+         5 # optional, time looking back, 1 or 5 years
+        )  
 dbDisconnect(conn)
 ```
