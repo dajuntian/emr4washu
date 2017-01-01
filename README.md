@@ -25,6 +25,11 @@ charlson(conn,
          "user.cohort", # the table name containing one column:visit no
          "user.cohort_w_charlson", # output table name
          5 # optional, time looking back, 1 or 5 years
-        )  
+        ) 
+        
+lab(conn, 
+    "user.cohort", # the table name containing one column:visit no
+    "user.cohort_w_charlson", # output table name
+    )
 dbDisconnect(conn)
 ```
