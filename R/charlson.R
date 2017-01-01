@@ -7,29 +7,30 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' charlson(conn, "pt list.csv")
+#' charlson(conn, "user.incohort", "usr.out_cohort")
 #' }
-charlson <- function(conn, pt_list, out_file = NA, look_back = 5) {
-  pt <- utils::read.csv(pt_list)
-  names(pt)[1] <-  "VISIT_NO"
+# charlson <- function(conn, pt_list, out_file = NA, look_back = 5) {
+charlson <- function(conn, inData, outData, look_back = 5) {    
+  # pt <- utils::read.csv(pt_list)
+  # names(pt)[1] <-  "VISIT_NO"
   #remove NA visit_no
-  pt <- pt[!is.na(pt$VISIT_NO), , drop = F]
+  # pt <- pt[!is.na(pt$VISIT_NO), , drop = F]
 
   #delete and create session.candidate
-  tryCatch(
-    RJDBC::dbSendUpdate(conn, "drop table session.candidate"),
-    error = function(cond) {
-      cat("notes: session.candidate does not exists\n")
-    }
-  )
+  # tryCatch(
+    # RJDBC::dbSendUpdate(conn, "drop table session.candidate"),
+    # error = function(cond) {
+      # cat("notes: session.candidate does not exists\n")
+    # }
+  # )
 
-  tryCatch(
-    RJDBC::dbWriteTable(conn, "session.candidate", pt, overwrite = TRUE),
-    error = function(cond) {
-      cat("check if session.candidate was replace\n")
-      stop(cond)
-    }
-  )
+  # tryCatch(
+  #   RJDBC::dbWriteTable(conn, "session.candidate", pt, overwrite = TRUE),
+  #   error = function(cond) {
+  #     cat("check if session.candidate was replace\n")
+  #     stop(cond)
+  #   }
+  # )
 
   #return the results from database
   # sql_get_icd_5 <- readChar("../src/sql_get_icd_5.sql", 
@@ -38,10 +39,10 @@ charlson <- function(conn, pt_list, out_file = NA, look_back = 5) {
   # sql_get_icd_1 <- readChar("../src/sql_get_icd_1.sql",
   #                           file.info("../src/sql_get_icd_1.sql")$size)
 
-  sql_get_icd_1 <- 
+  sql_get_icd_1 <- paste0( 
       "
 select c.visit_no, icdx.ICDX_Diagnosis_Code, icdx.ICDX_Version_No
-  from session.candidate c
+  from ", inData, " c
   join cds.cds_visit index_cv
   on c.visit_no = index_cv.visit_no
   join cds.registration index_reg
@@ -57,10 +58,11 @@ select c.visit_no, icdx.ICDX_Diagnosis_Code, icdx.ICDX_Version_No
   join cds.registration_icdx_diagnosis icdx
   on pre_cv.visit_no = icdx.visit_no
   order by c.visit_no
-  "
-  sql_get_icd_5 <- "
+  ")
+  
+  sql_get_icd_5 <- paste0("
     select c.visit_no, icdx.ICDX_Diagnosis_Code, icdx.ICDX_Version_No
-  from session.candidate c
+  from ", inData, " c
   join cds.cds_visit index_cv
   on c.visit_no = index_cv.visit_no
   join cds.registration index_reg
@@ -76,7 +78,7 @@ select c.visit_no, icdx.ICDX_Diagnosis_Code, icdx.ICDX_Version_No
   join cds.registration_icdx_diagnosis icdx
   on pre_cv.visit_no = icdx.visit_no
   order by c.visit_no
-  "  
+  ")  
   if (look_back == 5) {
     sql_get_icd = sql_get_icd_5
     cat("looking back 5 years\n")
@@ -90,14 +92,14 @@ select c.visit_no, icdx.ICDX_Diagnosis_Code, icdx.ICDX_Version_No
 
   pt_w_icd <- RJDBC::dbGetQuery(conn, sql_get_icd)
 
-  RJDBC::dbSendUpdate(conn, "drop table session.candidate")
+  # RJDBC::dbSendUpdate(conn, "drop table session.candidate")
   
   #merge with original input
-  pt_w_icd <- merge(pt,
-                    pt_w_icd,
-                    by = 'VISIT_NO',
-                    all = T,
-                    sort = T)
+  # pt_w_icd <- merge(pt,
+  #                   pt_w_icd,
+  #                   by = 'VISIT_NO',
+  #                   all = T,
+  #                   sort = T)
 
   #remove dot and space in the code
   pt_w_icd[, c(2)] <- sub("\\.", "", pt_w_icd[, c(2)])
@@ -146,15 +148,20 @@ select c.visit_no, icdx.ICDX_Diagnosis_Code, icdx.ICDX_Version_No
 
   com_pt_n <- 1 * com_pt
 
-  result <- cbind(pt[order(pt), , drop = F], com_pt_n, score_pt)
+  result <- cbind(data.frame(VISIT_NO = unique(pt_w_icd$VISIT_NO)),
+                  com_pt_n, score_pt)
 
+  
+  #output data to user
+  dbWriteTable(conn, outData, result)
+  
   #the output file name
-  if (is.na(out_file)) {
-  out_file <- paste0(normalizePath(dirname(pt_list)),
-                     "\\",
-                     "pt-w-charlson-",
-                     sub("\\.", "", format(Sys.time(), "%Y%m%d%H%M%OS2")),
-                     ".csv")}
-  write.csv(result, out_file, row.names = F)
-  cat(paste0("file output to ", out_file, "\n"))
+  # if (is.na(out_file)) {
+  # out_file <- paste0(normalizePath(dirname(pt_list)),
+  #                    "\\",
+  #                    "pt-w-charlson-",
+  #                    sub("\\.", "", format(Sys.time(), "%Y%m%d%H%M%OS2")),
+  #                    ".csv")}
+  # write.csv(result, out_file, row.names = F)
+  cat(paste0("\ndata output to ", outData, "\n"))
 }
