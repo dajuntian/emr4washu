@@ -8,18 +8,15 @@
 #' lab(conn, "user.cohort", "user.output")
 #' }
 lab <- function(conn, inData, outData) {
+
     library(RJDBC)
-    tryCatch(
-        RJDBC::dbSendUpdate(conn, "drop table session.temp_reg_list"),
-        error = function(cond) {
-            cat("notes: session.temp_reg_list does not exists\n")
-        }
-    )
-    
+
     dbSendUpdate(
         conn,
-        "create table session.temp_reg_list as (select reg_no, facility_concept_id from cds.cds_visit)
-        definition only"
+        "declare global temporary table session.temp_reg_list as
+        (select reg_no, facility_concept_id from cds.cds_visit)
+        definition only with replace on commit preserve rows not logged
+        "
     )
     dbSendUpdate(
         conn,
@@ -32,15 +29,8 @@ lab <- function(conn, inData, outData) {
             " c
             on cv.visit_no = c.visit_no"
         )
-        )
-    
-    #create table to store results
-    tryCatch(
-        RJDBC::dbSendUpdate(conn, paste0("drop table ", outData)),
-        error = function(cond) {
-            cat(paste0(outData, " not existed, creating new.\n"))
-        }
     )
+    
     
     dbSendUpdate(
         conn,
@@ -52,8 +42,6 @@ lab <- function(conn, inData, outData) {
             definition only"
         )
         )
-    
-    Sys.time()
     
     #progress bar
     total_visit <-
@@ -94,10 +82,6 @@ lab <- function(conn, inData, outData) {
     }
     dbClearResult(get_reg)
     
-    #delete temporary patient list table
-    dbSendUpdate(conn, "drop table session.temp_reg_list")
-    
     #output info
-    cat(paste0("lab results output to: ", outData, "\n"))
-    Sys.time()
+    cat(paste0("\nlab results output to: ", outData, "\n"))
 }
