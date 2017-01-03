@@ -29,7 +29,7 @@ charlson(conn,
         
 lab(conn, 
     "user.cohort", # the table name containing one column:visit no
-    "user.cohort_w_charlson", # output table name
+    "user.cohort_w_lab", # output table name
     )
 dbDisconnect(conn)
 ```
