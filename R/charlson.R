@@ -130,16 +130,19 @@ join cds.cds_visit index_cv
   result <- merge(result, visit_no, all = T)
   result$five_year_score <- result$score_pt
   result <- within(result,{
-      five_year_age_adj = NA
-      five_year_age_adj[AGE <= 49] = 0
-      five_year_age_adj[50 <= AGE & AGE <= 59] = 1
-      five_year_age_adj[60 <= AGE & AGE <= 69] = 2
-      five_year_age_adj[70 <= AGE & AGE <= 79] = 3
-      five_year_age_adj[80 <= AGE & AGE <= 89] = 4
-      five_year_age_adj[90 <= AGE & AGE <= 99] = 5
-      five_year_age_adj[100 <= AGE] = 6
+      five_year_age_adj <- NA
+      five_year_age_adj[AGE <= 49] <- 0
+      five_year_age_adj[50 <= AGE & AGE <= 59] <- 1
+      five_year_age_adj[60 <= AGE & AGE <= 69] <- 2
+      five_year_age_adj[70 <= AGE & AGE <= 79] <- 3
+      five_year_age_adj[80 <= AGE & AGE <= 89] <- 4
+      five_year_age_adj[90 <= AGE & AGE <= 99] <- 5
+      five_year_age_adj[100 <= AGE] <- 6
   })
   result$five_year_age_adj <- result$five_year_age_adj + result$five_year_score
+  names(result)[2:18] <- paste0("five_year_", names(result[2:18]))
+  result$score_pt <- NULL
+  result$AGE <- NULL
   
   #output data to user
   dbWriteTable(conn, outData, result)
