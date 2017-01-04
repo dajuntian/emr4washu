@@ -4,21 +4,23 @@
 \alias{charlson}
 \title{Charlson score from visit_no}
 \usage{
-charlson(conn, pt_list, out_file = NA, look_back = 5)
+charlson(conn, inData, outData, look_back = 5)
 }
 \arguments{
 \item{conn}{the connection from connect_db}
 
-\item{look_back}{the time looking back 1 or 5 years}
+\item{inData}{the table name for input, must have visit_no}
 
-\item{visit_no}{the visit_no from cds.cds_visit}
+\item{outData}{the table name for the output}
+
+\item{look_back}{the time looking back 1 or 5 years}
 }
 \description{
 This function calculates the Charlson score based on visit_no
 }
 \examples{
 \dontrun{
-charlson(conn, "pt list.csv")
+charlson(conn, "user.incohort", "usr.out_cohort")
 }
 }
 

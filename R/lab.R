@@ -9,16 +9,14 @@
 #' }
 lab <- function(conn, inData, outData) {
 
-    library(RJDBC)
-
-    dbSendUpdate(
+    RJDBC::dbSendUpdate(
         conn,
         "declare global temporary table session.temp_reg_list as
         (select reg_no, facility_concept_id from cds.cds_visit)
         definition only with replace on commit preserve rows not logged
         "
     )
-    dbSendUpdate(
+    RJDBC::dbSendUpdate(
         conn,
         paste0(
             "insert into session.temp_reg_list
@@ -32,7 +30,7 @@ lab <- function(conn, inData, outData) {
     )
     
     
-    dbSendUpdate(
+    RJDBC::dbSendUpdate(
         conn,
         paste0(
             "create table ",
@@ -45,22 +43,22 @@ lab <- function(conn, inData, outData) {
     
     #progress bar
     total_visit <-
-        dbGetQuery(conn, "select count(*) from session.temp_reg_list")[1, 1]
+        RJDBC::dbGetQuery(conn, "select count(*) from session.temp_reg_list")[1, 1]
     pb = txtProgressBar(min = 0,
                         max = total_visit,
                         initial = 0)
     sql_get_reg_no <- "select reg_no, facility_concept_id
     from session.temp_reg_list"
     
-    get_reg <- dbSendQuery(conn, sql_get_reg_no)
+    get_reg <- RJDBC::dbSendQuery(conn, sql_get_reg_no)
     completed_visit <- 0
     repeat {
-        single_pt <- dbFetch(get_reg, n = 1)
+        single_pt <- RJDBC::dbFetch(get_reg, n = 1)
         if (nrow(single_pt) <= 0) {
             cat(': Done')
             break
         }
-        dbSendUpdate(
+        RJDBC::dbSendUpdate(
             conn,
             sqlInterpolate(
                 conn,
@@ -80,7 +78,7 @@ lab <- function(conn, inData, outData) {
         completed_visit <- completed_visit + 1
         setTxtProgressBar(pb, completed_visit)
     }
-    dbClearResult(get_reg)
+    RJDBC::dbClearResult(get_reg)
     
     #output info
     cat(paste0("\nlab results output to: ", outData, "\n"))

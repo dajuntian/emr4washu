@@ -2,7 +2,8 @@
 #'
 #' This function calculates the Charlson score based on visit_no
 #' @param conn the connection from connect_db
-#' @param visit_no the visit_no from cds.cds_visit
+#' @param inData the table name for input, must have visit_no
+#' @param outData the table name for the output
 #' @param look_back the time looking back 1 or 5 years
 #' @export
 #' @examples
@@ -11,33 +12,6 @@
 #' }
 # charlson <- function(conn, pt_list, out_file = NA, look_back = 5) {
 charlson <- function(conn, inData, outData, look_back = 5) {    
-  # pt <- utils::read.csv(pt_list)
-  # names(pt)[1] <-  "VISIT_NO"
-  #remove NA visit_no
-  # pt <- pt[!is.na(pt$VISIT_NO), , drop = F]
-
-  #delete and create session.candidate
-  # tryCatch(
-    # RJDBC::dbSendUpdate(conn, "drop table session.candidate"),
-    # error = function(cond) {
-      # cat("notes: session.candidate does not exists\n")
-    # }
-  # )
-
-  # tryCatch(
-  #   RJDBC::dbWriteTable(conn, "session.candidate", pt, overwrite = TRUE),
-  #   error = function(cond) {
-  #     cat("check if session.candidate was replace\n")
-  #     stop(cond)
-  #   }
-  # )
-
-  #return the results from database
-  # sql_get_icd_5 <- readChar("../src/sql_get_icd_5.sql", 
-  #                           file.info("../src/sql_get_icd_5.sql")$size)
-  
-  # sql_get_icd_1 <- readChar("../src/sql_get_icd_1.sql",
-  #                           file.info("../src/sql_get_icd_1.sql")$size)
 
   sql_get_icd_1 <- paste0( 
       "
@@ -61,24 +35,35 @@ select c.visit_no, icdx.ICDX_Diagnosis_Code, icdx.ICDX_Version_No
   ")
   
   sql_get_icd_5 <- paste0("
-    select c.visit_no, icdx.ICDX_Diagnosis_Code, icdx.ICDX_Version_No
-  from ", inData, " c
-  join cds.cds_visit index_cv
-  on c.visit_no = index_cv.visit_no
-  join cds.registration index_reg
-  on index_cv.reg_no = index_reg.reg_no
-  and index_cv.facility_concept_id = index_reg.facility_concept_id
-  join cds.registration pre_reg
-  on index_reg.reference_no = pre_reg.reference_no
-  and pre_reg.admit_date <= index_reg.admit_date
-  and pre_reg.admit_date >= (index_reg.admit_date - 5 years)
-  join cds.cds_visit pre_cv
-  on pre_reg.reg_no = pre_cv.reg_no
-  and pre_reg.facility_concept_id = pre_cv.facility_concept_id
-  join cds.registration_icdx_diagnosis icdx
-  on pre_cv.visit_no = icdx.visit_no
-  order by c.visit_no
+    select distinct c.visit_no, icdx.ICDX_Diagnosis_Code, icdx.ICDX_Version_No,
+    case when 
+                          pre_reg.admit_date >= (index_reg.admit_date - 1 years) then 1
+                          else 5
+                          end as year_back,
+                          floor( (days(index_reg.discharge_date)-days(p.dob))/365.25) AS age
+                          
+                          from ",
+    inData, 
+ " c
+join cds.cds_visit index_cv
+ on c.visit_no = index_cv.visit_no
+ join cds.registration index_reg
+ on index_cv.reg_no = index_reg.reg_no
+ and index_cv.facility_concept_id = index_reg.facility_concept_id
+ join cds.patient p
+ on index_reg.reference_no = p.reference_no
+ join cds.registration pre_reg
+ on index_reg.reference_no = pre_reg.reference_no
+ and pre_reg.admit_date <= index_reg.admit_date
+ and pre_reg.admit_date >= (index_reg.admit_date - 5 years)
+ join cds.cds_visit pre_cv   
+ on pre_reg.reg_no = pre_cv.reg_no
+ and pre_reg.facility_concept_id = pre_cv.facility_concept_id
+ join cds.registration_icdx_diagnosis icdx
+ on pre_cv.visit_no = icdx.visit_no
+ order by c.visit_no
   ")  
+  
   if (look_back == 5) {
     sql_get_icd = sql_get_icd_5
     cat("looking back 5 years\n")
@@ -92,16 +77,6 @@ select c.visit_no, icdx.ICDX_Diagnosis_Code, icdx.ICDX_Version_No
 
   pt_w_icd <- RJDBC::dbGetQuery(conn, sql_get_icd)
 
-  # RJDBC::dbSendUpdate(conn, "drop table session.candidate")
-  
-  #merge with original input
-  # pt_w_icd <- merge(pt,
-  #                   pt_w_icd,
-  #                   by = 'VISIT_NO',
-  #                   all = T,
-  #                   sort = T)
-
-  #remove dot and space in the code
   pt_w_icd[, c(2)] <- sub("\\.", "", pt_w_icd[, c(2)])
   pt_w_icd[, c(2, 3)] <- sapply(pt_w_icd[, c(2, 3)], trimws)
 
@@ -147,21 +122,27 @@ select c.visit_no, icdx.ICDX_Diagnosis_Code, icdx.ICDX_Version_No
   summary(score_pt)
 
   com_pt_n <- 1 * com_pt
-
+  visit_no <- pt_w_icd[!duplicated(pt_w_icd$VISIT_NO), c("VISIT_NO", "AGE")]
   result <- cbind(data.frame(VISIT_NO = unique(pt_w_icd$VISIT_NO)),
                   com_pt_n, score_pt)
 
+  #join result and the age;
+  result <- merge(result, visit_no, all = T)
+  result$five_year_score <- result$score_pt
+  result <- within(result,{
+      five_year_age_adj = NA
+      five_year_age_adj[AGE <= 49] = 0
+      five_year_age_adj[50 <= AGE & AGE <= 59] = 1
+      five_year_age_adj[60 <= AGE & AGE <= 69] = 2
+      five_year_age_adj[70 <= AGE & AGE <= 79] = 3
+      five_year_age_adj[80 <= AGE & AGE <= 89] = 4
+      five_year_age_adj[90 <= AGE & AGE <= 99] = 5
+      five_year_age_adj[100 <= AGE] = 6
+  })
+  result$five_year_age_adj <- result$five_year_age_adj + result$five_year_score
   
   #output data to user
   dbWriteTable(conn, outData, result)
-  
-  #the output file name
-  # if (is.na(out_file)) {
-  # out_file <- paste0(normalizePath(dirname(pt_list)),
-  #                    "\\",
-  #                    "pt-w-charlson-",
-  #                    sub("\\.", "", format(Sys.time(), "%Y%m%d%H%M%OS2")),
-  #                    ".csv")}
-  # write.csv(result, out_file, row.names = F)
+
   cat(paste0("\ndata output to ", outData, "\n"))
 }
