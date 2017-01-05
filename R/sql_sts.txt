@@ -1,0 +1,4 @@
+update t set x = ';';; select ';' from xt
+where y = 1
+and x = 1;
+            delete from shema.tb;
