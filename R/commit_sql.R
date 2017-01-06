@@ -10,6 +10,7 @@
 #' commit_sql(conn, "Z:/EMR/bearhunt.sql")
 #' commit_sql(conn, "select * from session.ca", file_flag = F)
 #' }
+#' 
 commit_sql <- function(conn, sql_file, file_flag = T) {
     
     #read the sql file into separate sql statements into sql_seq
