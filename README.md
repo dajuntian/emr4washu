@@ -1,7 +1,7 @@
 # emr4washu
 
 ## Overview
-emr4washu wraps up some of my secret recipes into R package, so we can cook more efficiently. The goal is we don't need to wash the dirty dishes anymore.
+The R package of emr4washu wraps up some of the frequent codes into R package, so we can minimize the copy and paste code. By standadizing the user interface (input, output), it would be easier to pipeline the data flow. The real world healthcare data are dirty, but don't panic. There is always hope.
 
 ## Installation
 ```{r, eval = FALSE}
@@ -22,14 +22,13 @@ conn <- connect_db("C:/mydocument/db2jcc4.jar", # path to the jdbc driver
                               'user', # username
                               .rs.askForPassword("Enter password:")) #password
 charlson(conn, 
-         "user.cohort", # the table name containing one column:visit no
-         "user.cohort_w_charlson", # output table name
-         5 # optional, time looking back, 1 or 5 years
+         "user.cohort", # the input table containing one column:visit no
+         "user.cohort_w_charlson", # the output table name
         ) 
         
 lab(conn, 
-    "user.cohort", # the table name containing one column:visit no
-    "user.cohort_w_lab", # output table name
+    "user.cohort", # the input table containing one column:visit no
+    "user.cohort_w_lab", # the output table name
     )
 dbDisconnect(conn)
 ```
