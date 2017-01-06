@@ -3,3 +3,5 @@
 export(charlson)
 export(connect_db)
 export(lab)
+importFrom(utils,setTxtProgressBar)
+importFrom(utils,txtProgressBar)

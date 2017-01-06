@@ -111,16 +111,16 @@ join cds.cds_visit index_cv
     #join result and the age;
     result <- merge(result, visit_no, all = T)
     result$score <- result$score_pt
-    result <- within(result,{
-        score_age_adj <- NA
-        score_age_adj[AGE <= 49] <- 0
-        score_age_adj[50 <= AGE & AGE <= 59] <- 1
-        score_age_adj[60 <= AGE & AGE <= 69] <- 2
-        score_age_adj[70 <= AGE & AGE <= 79] <- 3
-        score_age_adj[80 <= AGE & AGE <= 89] <- 4
-        score_age_adj[90 <= AGE & AGE <= 99] <- 5
-        score_age_adj[100 <= AGE] <- 6
-    })
+    
+    result$score_age_adj <- NA
+    result[result$AGE <= 49, 'score_age_adj'] <- 0
+    result[50 <= result$AGE & result$AGE <= 59, 'score_age_adj'] <- 1
+    result[60 <= result$AGE & result$AGE <= 69, 'score_age_adj'] <- 2
+    result[70 <= result$AGE & result$AGE <= 79, 'score_age_adj'] <- 3
+    result[80 <= result$AGE & result$AGE <= 89, 'score_age_adj'] <- 4
+    result[90 <= result$AGE & result$AGE <= 99, 'score_age_adj'] <- 5
+    result[100 <= result$AGE, 'score_age_adj'] <- 6
+    
     result$score_pt <- NULL
     result$AGE <- NULL
     result$score_age_adj <- result$score_age_adj + result$score

@@ -2,6 +2,7 @@
 #' @param conn the connection returned from connect_db
 #' @param inData the table name of the input containing visit_no
 #' @param outData the table name for the output
+#' @importFrom utils setTxtProgressBar txtProgressBar
 #' @export
 #' @examples
 #' \dontrun{
@@ -28,8 +29,8 @@ lab <- function(conn, inData, outData) {
             on cv.visit_no = c.visit_no"
         )
     )
-    
-    
+
+
     RJDBC::dbSendUpdate(
         conn,
         paste0(
@@ -40,7 +41,7 @@ lab <- function(conn, inData, outData) {
             definition only"
         )
         )
-    
+
     #progress bar
     total_visit <-
         RJDBC::dbGetQuery(conn, "select count(*) from session.temp_reg_list")[1, 1]
@@ -49,18 +50,18 @@ lab <- function(conn, inData, outData) {
                         initial = 0)
     sql_get_reg_no <- "select reg_no, facility_concept_id
     from session.temp_reg_list"
-    
+
     get_reg <- RJDBC::dbSendQuery(conn, sql_get_reg_no)
     completed_visit <- 0
     repeat {
-        single_pt <- RJDBC::dbFetch(get_reg, n = 1)
+        single_pt <- DBI::dbFetch(get_reg, n = 1)
         if (nrow(single_pt) <= 0) {
             cat(': Done')
             break
         }
         RJDBC::dbSendUpdate(
             conn,
-            sqlInterpolate(
+            DBI::sqlInterpolate(
                 conn,
                 paste0(
                     "insert into ",
@@ -79,7 +80,7 @@ lab <- function(conn, inData, outData) {
         setTxtProgressBar(pb, completed_visit)
     }
     RJDBC::dbClearResult(get_reg)
-    
+
     #output info
     cat(paste0("\nlab results output to: ", outData, "\n"))
 }
