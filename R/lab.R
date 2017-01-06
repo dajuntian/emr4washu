@@ -21,7 +21,7 @@ lab <- function(conn, inData, outData) {
         conn,
         paste0(
             "insert into session.temp_reg_list
-            select distinct reg_no, facility_concept_id
+            select distinct cv.reg_no, cv.facility_concept_id
             from cds.cds_visit cv
             join ",
             inData,
