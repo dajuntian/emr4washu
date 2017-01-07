@@ -10,37 +10,11 @@
 #' }
 lab <- function(conn, inData, outData) {
 
-    RJDBC::dbSendUpdate(
-        conn,
-        "declare global temporary table session.temp_reg_list as
-        (select reg_no, facility_concept_id from cds.cds_visit)
-        definition only with replace on commit preserve rows not logged
-        "
-    )
-    RJDBC::dbSendUpdate(
-        conn,
-        paste0(
-            "insert into session.temp_reg_list
-            select distinct cv.reg_no, cv.facility_concept_id
-            from cds.cds_visit cv
-            join ",
-            inData,
-            " c
-            on cv.visit_no = c.visit_no"
-        )
-    )
-
-
-    RJDBC::dbSendUpdate(
-        conn,
-        paste0(
-            "create table ",
-            outData,
-            " as
-            (select * from cdr.lab_test_results)
-            definition only"
-        )
-        )
+    #create temporary list and out table
+    declare_template <- sub("input.input", inData, lab_sql_c_template)
+    declare_template <- sub("output.output", outData, declare_template)
+   
+    commit_sql(conn, declare_template, file_flag = F)
 
     #progress bar
     total_visit <-
@@ -74,7 +48,8 @@ lab <- function(conn, inData, outData) {
                 ),
                 PAN = trimws(single_pt$REG_NO),
                 FAC = single_pt$FACILITY_CONCEPT_ID
-                )
+            )
+            
             )
         completed_visit <- completed_visit + 1
         setTxtProgressBar(pb, completed_visit)
