@@ -45,7 +45,7 @@ DECLARE GLOBAL TEMPORARY TABLE session.candidates as (
     
     #read sql file
     cat("\nsession.candidated created, beginning apache-ing\n")
-    commit_sql(conn, "apacheII.sql64")
+    commit_sql(conn, apache_sql_text, file_flag = F)
     
     RJDBC::dbSendUpdate(
         conn,
