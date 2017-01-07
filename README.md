@@ -9,7 +9,7 @@ install.packages("devtools")
 devtools::install_github("dajuntian/emr4washu")
 library(emr4washu)
 ```
-## When the above method fails, it's because I haven't updated the SQL library yet. You should contact me for the source file, then
+## If the above  fails, it's probably because I haven't updated the sysdata. You should contact me for the source file, then install through
 ```{r, eval = FALSE}
 #path_to_file looks like "C:/Download/emr4washu0090.tar.gz"
 install.packages(path_to_file, repos = NULL, type="source") 
