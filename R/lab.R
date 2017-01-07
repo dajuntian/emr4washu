@@ -22,8 +22,8 @@ lab <- function(conn, inData, outData) {
     pb = txtProgressBar(min = 0,
                         max = total_visit,
                         initial = 0)
-    sql_get_reg_no <- "select reg_no, facility_concept_id
-    from session.temp_reg_list"
+    
+    sql_get_reg_no <- lab_sql_get_reg_no
 
     get_reg <- RJDBC::dbSendQuery(conn, sql_get_reg_no)
     completed_visit <- 0
@@ -37,15 +37,7 @@ lab <- function(conn, inData, outData) {
             conn,
             DBI::sqlInterpolate(
                 conn,
-                paste0(
-                    "insert into ",
-                    outData,
-                    "
-                    select *
-                    from cdr.lab_test_results
-                    where PATIENT_ACCOUNT_NUMBER = ?PAN
-                    and PATIENT_ACCOUNT_NUMBER_FACILITY_ID = ?FAC"
-                ),
+                sub("output.output", outData, lab_insert_outdata),
                 PAN = trimws(single_pt$REG_NO),
                 FAC = single_pt$FACILITY_CONCEPT_ID
             )
