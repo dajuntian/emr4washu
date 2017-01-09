@@ -39,7 +39,7 @@ lab(conn,
     "user.cohort", # the input table containing one column:visit no
     "user.cohort_w_lab", # the output table name
     )
-dbDisconnect(conn)
+RJDBC::dbDisconnect(conn)
 
 #commit the sql file to conn, and generate output as resultset_#
 #right now the sql file should not contain any comments
