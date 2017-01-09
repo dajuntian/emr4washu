@@ -1,7 +1,9 @@
 # emr4washu
 
 ## Overview
-The R package of emr4washu wraps up some of the frequent codes into R package, so we can minimize the copy and paste code. By standadizing the user interface (input, output), it would be easier to pipeline the data flow. The real world healthcare data are dirty, but don't panic. There is always hope.
+The R package of emr4washu wraps up some of the frequent codes into R package, so we can minimize the copy and paste code. By standadizing the user interface (input, output), it would be easier to pipeline the data flow. The real world healthcare data are dirty, but don't panic. There is always hope. 
+
+The purpose was not to replace any existing tools, rather than a supplemental too whenever necessary.
 
 ## Installation
 ```{r, eval = FALSE}
@@ -9,7 +11,7 @@ install.packages("devtools")
 devtools::install_github("dajuntian/emr4washu")
 library(emr4washu)
 ```
-## When the above method fails, it's because I haven't updated the SQL library yet. You should contact me for the source file, then
+## If the above  fails, it's probably because I haven't updated the sysdata. You should contact me for the source file, then install through
 ```{r, eval = FALSE}
 #path_to_file looks like "C:/Download/emr4washu0090.tar.gz"
 install.packages(path_to_file, repos = NULL, type="source") 
@@ -38,4 +40,9 @@ lab(conn,
     "user.cohort_w_lab", # the output table name
     )
 dbDisconnect(conn)
+
+#commit the sql file to conn, and generate output as resultset_#
+#right now the sql file should not contain any comments
+commit_sql(conn, "Z:/EMR/bearhunt.sql") 
+commit_sql(conn, "select * from session.ca", file_flag = F)
 ```
