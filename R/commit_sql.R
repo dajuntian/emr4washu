@@ -27,6 +27,7 @@ commit_sql <- function(conn, sql_file, file_flag = T) {
         if (grepl("^select", sql_statement, ignore.case = T, perl = T)) {
             result <- DBI::dbGetQuery(conn, sql_statement)
             assign(paste0('resultset_', result_set_id), result, envir = .GlobalEnv)
+            result_set_id <- result_set_id + 1
         } else {
             RJDBC::dbSendUpdate(conn, sql_statement)
         }
@@ -48,3 +49,7 @@ commit_sql <- function(conn, sql_file, file_flag = T) {
     m <- gregexpr(pattern, sql_raw)
     unlist(regmatches(sql_raw, m))
 }
+
+
+
+
