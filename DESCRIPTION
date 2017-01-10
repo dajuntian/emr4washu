@@ -1,8 +1,8 @@
 Package: emr4washu
 Title: What the Package Does (one line, title case)
 Version: 0.0.0.9000
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+Authors@R: person("Dajun", "Tian", email = "tiandajun at gmail dot com", role = c("aut", "cre"))
+Description: A package to make EMR more friendly
 Depends:
     R (>= 3.3.2)
 License: file LICENSE
