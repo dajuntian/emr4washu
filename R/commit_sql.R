@@ -19,6 +19,9 @@ commit_sql <- function(conn, sql_file, file_flag = T) {
     else {sql_seq <- .string_to_sql_vector(sql_file)}
     result_set_id <- 1
     
+    #remove comments
+    sql_seq <- parse_sql_comments(sql_seq)
+    
     for (sql_statement in sql_seq) {
         sql_statement <- trimws(gsub("\\s+", " ", sql_statement, perl = T))
         
@@ -38,6 +41,7 @@ commit_sql <- function(conn, sql_file, file_flag = T) {
 .file_to_sql_vector <- function(sql_file) {
   # import sql text files into vector of string
   sql_raw <- readChar(sql_file, file.info(sql_file)$size)
+  
   pattern <- "((?:[^;\"']|\"[^\"]*\"|'[^']*')+)"
   m <- gregexpr(pattern, sql_raw)
   unlist(regmatches(sql_raw, m))
