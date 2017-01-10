@@ -5,7 +5,7 @@ The R package of emr4washu wraps up some of the frequent codes into R package, s
 
 The purpose was not to replace any existing tools, rather than a supplemental too whenever necessary.
 
-## Installation
+## Installation (Curently NOT working)
 ```{r, eval = FALSE}
 install.packages("devtools")
 devtools::install_github("dajuntian/emr4washu")
@@ -26,23 +26,25 @@ install.packages(path_to_file, repos = NULL, type="source")
 ```{r, eval = FALSE}
 conn <- connect_db("C:/mydocument/db2jcc4.jar", # path to the jdbc driver
                               "db.company.org", # the host name
-                              12000, # the port number
+                              10000, # the port number
                               'dbname', # the database name  
-                              'user', # username
+                              'abc1234', # username
                               .rs.askForPassword("Enter password:")) #password
 charlson(conn, 
-         "user.cohort", # the input table containing one column:visit no
-         "user.cohort_w_charlson", # the output table name
+         "abc1234.cohort", # the input table containing one column:visit no
+         "abc1234.cohort_w_charlson", # the output table name
         ) 
         
 lab(conn, 
-    "user.cohort", # the input table containing one column:visit no
-    "user.cohort_w_lab", # the output table name
+    "abc1234.cohort", # the input table containing one column:visit no
+    "abc1234.cohort_w_lab", # the output table name
     )
-RJDBC::dbDisconnect(conn)
-
+    
 #commit the sql file to conn, and generate output as resultset_#
-#right now the sql file should not contain any comments
+#right now support for comments is limited. see ?emr4washu::parse_sql_comments
 commit_sql(conn, "Z:/EMR/bearhunt.sql") 
 commit_sql(conn, "select * from session.ca", file_flag = F)
+
+#disconnect from the database
+RJDBC::dbDisconnect(conn)
 ```
