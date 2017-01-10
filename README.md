@@ -5,7 +5,7 @@ The R package of emr4washu wraps up some of the frequent codes into R package, s
 
 The purpose was not to replace any existing tools, rather than a supplemental too whenever necessary.
 
-~~## Installation~~
+## Installation (Curently NOT working)
 ```{r, eval = FALSE}
 install.packages("devtools")
 devtools::install_github("dajuntian/emr4washu")
