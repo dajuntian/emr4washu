@@ -1,8 +1,9 @@
 Package: emr4washu
-Title: What the Package Does (one line, title case)
+Title: A package to make EMR more friendly
 Version: 0.0.0.9000
-Authors@R: person("Dajun", "Tian", email = "tiandajun at gmail dot com", role = c("aut", "cre"))
-Description: A package to make EMR more friendly
+Authors@R: person("Dajun", "Tian", email = "tiandajun@gmail.com", role = c("aut", "cre"))
+Description: This package combines some of the most frequenty scripts for working with EMR. In the hope
+    it will be useful.
 Depends:
     R (>= 3.3.2)
 License: file LICENSE
