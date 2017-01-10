@@ -26,18 +26,18 @@ install.packages(path_to_file, repos = NULL, type="source")
 ```{r, eval = FALSE}
 conn <- connect_db("C:/mydocument/db2jcc4.jar", # path to the jdbc driver
                               "db.company.org", # the host name
-                              12000, # the port number
+                              10000, # the port number
                               'dbname', # the database name  
-                              'user', # username
+                              'abc1234', # username
                               .rs.askForPassword("Enter password:")) #password
 charlson(conn, 
-         "user.cohort", # the input table containing one column:visit no
-         "user.cohort_w_charlson", # the output table name
+         "abc1234.cohort", # the input table containing one column:visit no
+         "abc1234.cohort_w_charlson", # the output table name
         ) 
         
 lab(conn, 
-    "user.cohort", # the input table containing one column:visit no
-    "user.cohort_w_lab", # the output table name
+    "abc1234.cohort", # the input table containing one column:visit no
+    "abc1234.cohort_w_lab", # the output table name
     )
 RJDBC::dbDisconnect(conn)
 
