@@ -39,10 +39,12 @@ lab(conn,
     "abc1234.cohort", # the input table containing one column:visit no
     "abc1234.cohort_w_lab", # the output table name
     )
-RJDBC::dbDisconnect(conn)
-
+    
 #commit the sql file to conn, and generate output as resultset_#
-#right now the sql file should not contain any comments
+#right now support for comments is limited. see ?emr4washu::parse_sql_comments
 commit_sql(conn, "Z:/EMR/bearhunt.sql") 
 commit_sql(conn, "select * from session.ca", file_flag = F)
+
+#disconnect from the database
+RJDBC::dbDisconnect(conn)
 ```
