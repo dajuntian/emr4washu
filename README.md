@@ -32,7 +32,8 @@ conn <- connect_db("C:/mydocument/db2jcc4.jar", # path to the jdbc driver
 
 #Here the input table should be perminant table in our user schema and should have the column visit_no,
 #And the visit_no should be the same type as the VISIT_NO.
-#For Apache score, another column INDEX_DATE is required and the type should be datetime (= admission date most likely)
+#For Apache score, another column INDEX_DATE is required and the type should be datetime 
+#(= admission date most likely)
 #The output table should also be perminant table and should not exist because DB2 doesn't alow rewrite table
 
 charlson(conn, 
