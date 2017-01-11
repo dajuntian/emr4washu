@@ -55,7 +55,7 @@ lab(conn,
 #or "select * from table where x = '/**/';".
 #However, I haven't seen this kind of case so far.
 commit_sql(conn, "Z:/EMR/bearhunt.sql") 
-commit_sql(conn, "select * from session.ca", file_flag = F)
+commit_sql(conn, "select * from session.candidate", file_flag = F)
 
 #disconnect from the database
 RJDBC::dbDisconnect(conn)
