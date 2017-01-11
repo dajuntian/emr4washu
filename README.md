@@ -7,9 +7,9 @@ The purpose was not to replace any existing tools, rather than a supplemental to
 
 ## ~~Installation (Curently NOT working)~~
 ```{r, eval = FALSE}
-install.packages("devtools")
-devtools::install_github("dajuntian/emr4washu")
-library(emr4washu)
+~~install.packages("devtools")~~
+~~devtools::install_github("dajuntian/emr4washu")~~
+~~library(emr4washu)~~
 ```
 ## If the above  fails, it's probably because I haven't updated the sysdata. You should contact me for the source file, then install through
 ```{r, eval = FALSE}
