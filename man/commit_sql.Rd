@@ -21,6 +21,5 @@ commit .sql file to database
 commit_sql(conn, "Z:/EMR/bearhunt.sql")
 commit_sql(conn, "select * from session.ca", file_flag = F)
 }
-
 }
 

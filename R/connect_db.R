@@ -1,5 +1,5 @@
 #' Connect to db2
-#' 
+#'
 #' This function allows to connect to db2 database
 #' @param driver the path to the jdbc driver
 #' @param host The host name of the database.
@@ -8,11 +8,10 @@
 #' @param user the user name to log in
 #' @param pw the password for the user
 #' @export
-#' @examples 
+#' @examples
 #' \dontrun{
 #' connect_db("C:/db2jcc4.jar", 'xx.xxx.org' port = "12345", user = "user", pw = "pw")
 #' }
-
 connect_db <- function(driver, host, port, dbname, user, pw){
   jcc = RJDBC::JDBC("com.ibm.db2.jcc.DB2Driver",
                     driver)

@@ -2,7 +2,7 @@
 % Please edit documentation in R/parse_sql_comments.R
 \name{parse_sql_comments}
 \alias{parse_sql_comments}
-\title{remove comments from sql statements}
+\title{remove comments from sql statements.}
 \usage{
 parse_sql_comments(input_sql)
 }
@@ -10,8 +10,9 @@ parse_sql_comments(input_sql)
 \item{input_sql}{the statements of sql in string variable}
 }
 \description{
-This function is used to parse comments from sql statments. It removes something like /* coments*/ or
---. But it won't work if there is something like select * from tname where x = '--test'.
+This function is used to parse comments from sql statments. It removes
+something like /* coments*/ or --. But it won't work if there is something
+like select * from tname where x = '--test'.
 }
 \examples{
 parse_sql_comments("select * from t --select \\n where t <2")
