@@ -89,7 +89,7 @@ cdr_med <- function(conn, inData, outData) {
                 conn,
                 sub("output.output", outData, cdr_med_insert_outdata),
                 PAN = trimws(single_pt$REG_NO),
-                FAC = single_pt$FACILITY_CONCEPT_ID
+                FAC = trimws(single_pt$FACILITY_CONCEPT_ID)
             )
             
             )

@@ -85,18 +85,19 @@ charlson <- function(conn, inData, outData) {
     result$score <- result$score_pt
 
     result$score_age_adj <- NA
-    result[result$AGE <= 49, 'score_age_adj'] <- 0
-    result[50 <= result$AGE &
+    #if age is not missing
+    result[!is.na(result$AGE) & result$AGE <= 49, 'score_age_adj'] <- 0
+    result[!is.na(result$AGE) & 50 <= result$AGE &
                result$AGE <= 59, 'score_age_adj'] <- 1
-    result[60 <= result$AGE &
+    result[!is.na(result$AGE) & 60 <= result$AGE &
                result$AGE <= 69, 'score_age_adj'] <- 2
-    result[70 <= result$AGE &
+    result[!is.na(result$AGE) & 70 <= result$AGE &
                result$AGE <= 79, 'score_age_adj'] <- 3
-    result[80 <= result$AGE &
+    result[!is.na(result$AGE) & 80 <= result$AGE &
                result$AGE <= 89, 'score_age_adj'] <- 4
-    result[90 <= result$AGE &
+    result[!is.na(result$AGE) & 90 <= result$AGE &
                result$AGE <= 99, 'score_age_adj'] <- 5
-    result[100 <= result$AGE, 'score_age_adj'] <- 6
+    result[!is.na(result$AGE) & 100 <= result$AGE, 'score_age_adj'] <- 6
 
     result$score_pt <- NULL
     result$AGE <- NULL
