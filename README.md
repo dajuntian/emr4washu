@@ -5,13 +5,13 @@ The R package of emr4washu wraps up some of the frequent sql querries into R pac
 
 The purpose was not to replace any existing tools, rather than a supplemental tool whenever necessary. It only works with our internal database and the workflow is supposed to be consistent for typical queries.
 
-## ~~Installation (Curently NOT working)~~
+## Installation (Curently NOT working)
 ```{r, eval = FALSE}
 install.packages("devtools")
 devtools::install_github("dajuntian/emr4washu")
 library(emr4washu)
 ```
-## If the above  fails, it's probably because I haven't included the SQL part. You should contact me for the source file, then install through
+## Alternatively, reqeust the source file from us and then install through
 ```{r, eval = FALSE}
 #"C:/Download/emr4washu0090.tar.gz" should be replaced by the actual location in your computer.
 install.packages("C:/Download/emr4washu0090.tar.gz", repos = NULL, type="source") 
