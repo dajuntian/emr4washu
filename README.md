@@ -28,7 +28,7 @@ conn <- connect_db("C:/mydocument/db2jcc4.jar", # path to the jdbc driver
                               10000, # ditto
                               'dbname', # ditto  
                               'abc1234', # this is from DBA
-                              .rs.askForPassword("Enter password:")) #password
+                              .rs.askForPassword("Enter password:")) #password, or save it to ~
 
 #Here the input table should be perminant table in our user schema and should have the column visit_no,
 #And the visit_no should be the same type as the VISIT_NO.
