@@ -1,4 +1,4 @@
-# emr4washu
+# emr4washu version 00.01
 
 ## Overview
 The R package of emr4washu wraps up some of the frequent sql querries into R package, so we can minimize the copy and paste code. By standadizing the user interface (input, output), it would be easier to pipeline the data flow. The real world healthcare data are dirty, but don't panic. There is always hope. 
